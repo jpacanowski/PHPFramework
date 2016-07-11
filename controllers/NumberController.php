@@ -2,8 +2,8 @@
 
 class Number
 {
-	public function random()
-	{
-		echo mt_rand(1, 80);
-	}
+    public function random()
+    {
+        echo mt_rand(1, 80);
+    }
 }
