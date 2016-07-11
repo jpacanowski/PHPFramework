@@ -2,6 +2,11 @@
 
 class Number
 {
+    public function index()
+    {
+        echo 'Hello from NumberController.php';
+    }
+
     public function random()
     {
         echo mt_rand(1, 80);

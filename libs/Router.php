@@ -11,48 +11,53 @@ class Router
             $request = explode('/', $request);
             
             $controller = $request[0];
-            $action = $request[1];
 
-            if(isset($request[2]))
+            $file = 'controllers/' . ucfirst($controller) . 'Controller.php';
+
+            if(file_exists($file))
+                require_once $file;
+
+            if(isset($request[1]))
             {
-                $file = 'controllers/' . ucfirst($controller) . 'Controller.php';
+                $action = $request[1];
 
-                if(file_exists($file))
-                    require_once $file;
-
-                switch(count($request))
+                if(!isset($request[2]))
                 {
-                    case 3:
+                    if(class_exists($controller))
+                        $controller = new $controller();
+                    
+                    if(method_exists($controller, $action))
+                        $controller->$action();
+                }
+                else
+                {
+                    switch(count($request))
+                    {
+                        case 3:
+                            if(class_exists($controller))
+                                $controller = new $controller();
 
-                        if(class_exists($controller))
-                            $controller = new $controller();
+                            if(method_exists($controller, $action))
+                                $controller->$action($request[2]);
+                        break;
 
-                        if(method_exists($controller, $action))
-                            $controller->$action($request[2]);
-                    break;
+                        case 4:
+                            if(class_exists($controller))
+                                $controller = new $controller();
 
-                    case 4:
-
-                        if(class_exists($controller))
-                            $controller = new $controller();
-
-                        if(method_exists($controller, $action))
-                            $controller->$action($request[2], $request[3]);
-                    break;
+                            if(method_exists($controller, $action))
+                                $controller->$action($request[2], $request[3]);
+                        break;
+                    }
                 }
             }
             else
             {
-                $file = 'controllers/' . ucfirst($controller) . 'Controller.php';
-
-                if(file_exists($file))
-                    require_once $file;
-                
                 if(class_exists($controller))
                     $controller = new $controller();
-                
-                if(method_exists($controller, $action))
-                    $controller->$action();
+
+                if(method_exists($controller, 'index'))
+                    $controller->index();
             }
         }
         else
