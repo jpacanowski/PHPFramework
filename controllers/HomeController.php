@@ -4,6 +4,7 @@ class HomeController
 {
     function __construct()
     {
-        return View::make('index');
+        $data['body'] = 'Hello world';
+        return View::make('index', $data);
     }
 }
